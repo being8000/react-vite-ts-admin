@@ -65,7 +65,7 @@ export const userInfo = createAsyncThunk("user/info", async () => {
   // The value we return becomes the `fulfilled` action payload
 });
 
-export const slice = createSlice({
+export const userSlice = createSlice({
   name: "user",
   initialState,
   reducers: {
@@ -94,5 +94,5 @@ export const selectToken = (state: RootState) => {
 };
 
 export const selectUser = (state: RootState) => state.user.user;
-export const { setUserInfo, clearUserInfo } = slice.actions;
-export default slice.reducer;
+export const { setUserInfo, clearUserInfo } = userSlice.actions;
+export default userSlice;

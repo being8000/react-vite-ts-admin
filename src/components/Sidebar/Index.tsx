@@ -6,7 +6,6 @@ import ListItemText from "@mui/material/ListItemText";
 import InboxIcon from "@mui/icons-material/MoveToInbox";
 import Divider from "@mui/material/Divider";
 import MailIcon from "@mui/icons-material/Mail";
-import RefreshRoundedIcon from "@mui/icons-material/RefreshRounded";
 import Ring from "../Loading/Ring";
 import { NavLink } from "react-router-dom";
 

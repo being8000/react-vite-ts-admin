@@ -1,8 +1,8 @@
 import {
   configureStore,
   ThunkAction,
-  Reducer,
   ReducersMapObject,
+  Slice,
   Action,
 } from "@reduxjs/toolkit";
 
@@ -10,15 +10,12 @@ const modules = await import.meta.glob("./slice/*.tsx", {
   eager: true,
 });
 type Mod = {
-  slice: {
-    name: string;
-  };
-  default: Reducer;
+  default: Slice;
 };
 const reducer: ReducersMapObject = {};
 Object.values(modules).forEach((mod) => {
   const m = mod as Mod;
-  reducer[m.slice.name] = m.default;
+  reducer[m.default.name] = m.default.reducer;
 });
 
 export const store = configureStore({
