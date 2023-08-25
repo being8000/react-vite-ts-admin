@@ -4,11 +4,7 @@ type FormikFieldProps = {
   field: string;
   label: string;
 };
-export const formikFieldProps = ({
-  formik,
-  field,
-  label,
-}: FormikFieldProps) => {
+export const FieldProps = ({ formik, field, label }: FormikFieldProps) => {
   return {
     id: field,
     name: field,
@@ -18,5 +14,16 @@ export const formikFieldProps = ({
     onBlur: formik.handleBlur,
     error: formik.touched[field] && Boolean(formik.errors[field]),
     helperText: formik.touched[field] && formik.errors[field],
+  };
+};
+export const FieldPropsNH = ({ formik, field, label }: FormikFieldProps) => {
+  return {
+    id: field,
+    name: field,
+    label: label,
+    value: formik.values[field],
+    onChange: formik.handleChange,
+    onBlur: formik.handleBlur,
+    error: formik.touched[field] && Boolean(formik.errors[field]),
   };
 };

@@ -18,8 +18,7 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
-import ExampleTable from "@/components/ReactTable";
-
+import ReactTable from "@/components/ReactTable";
 import { Contacts, getContacts } from "@/data/contacts";
 import { useEffect, useState } from "react";
 
@@ -171,7 +170,7 @@ function Root() {
           </Table>
         </TableContainer>
       </div>
-      <ExampleTable />
+      <ReactTable />
       {/* <div
         id="detail"
         className={navigation.state === "loading" ? "loading" : ""}

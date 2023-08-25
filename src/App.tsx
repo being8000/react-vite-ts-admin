@@ -16,7 +16,9 @@ import Dashboard from "./routes/dashboard";
 import { userInfo, clearUserInfo } from "./app/slice/UserSlice";
 
 async function loader() {
-  await store.dispatch(userInfo());
+  if (!store.getState().user.user) {
+    await store.dispatch(userInfo());
+  }
   if (!store.getState().user.user) {
     await store.dispatch(clearUserInfo());
     return redirect("/login");

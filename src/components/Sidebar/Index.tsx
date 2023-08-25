@@ -35,8 +35,9 @@ export default function Sidebar() {
           padding: "5px",
         }}
       >
-        {routers.map((route) => (
+        {routers.map((route, index) => (
           <NavLink
+            key={index}
             to={route.path}
             className={({ isActive, isPending }) =>
               isPending ? "pending" : isActive ? "pointer-events-none" : ""
@@ -45,6 +46,7 @@ export default function Sidebar() {
             {({ isActive, isPending }) => (
               <ListItem
                 disablePadding
+                className="transition duration-[150ms]"
                 {...(isActive && {
                   sx: {
                     borderRadius: "8px",

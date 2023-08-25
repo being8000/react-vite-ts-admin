@@ -14,16 +14,16 @@ import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import FormHelperText from "@mui/material/FormHelperText";
 import api from "@/utils/request";
-import { formikFieldProps } from "@/utils/props";
+import { FieldProps, FieldPropsNH } from "@/utils/props";
 import { MD5 } from "crypto-js";
-import { LoginForm, login, selectToken } from "@/app/slice/UserSlice";
+import { LoginForm, login, selectToken, getToken } from "@/app/slice/UserSlice";
 import { useAppDispatch, useAppSelector } from "@/app/hooks";
 import { useNavigate } from "react-router-dom";
 
 const validationSchema = yup.object({
   username: yup.string().required("Username is required"),
   password: yup.string().required("Password is required"),
-  msgCode: yup.string().required("Password is required"),
+  msgCode: yup.string().required("OTP is required"),
 });
 
 function SmsSender({
@@ -76,7 +76,7 @@ function SmsSender({
 
 export default function AuthRoute() {
   const navigate = useNavigate();
-  const token = useAppSelector(selectToken);
+  // const token = useAppSelector(selectToken);
   const dispatch = useAppDispatch();
   const [showPassword, setShowPassword] = useState(false);
   const handleClickShowPassword = () => setShowPassword((show) => !show);
@@ -94,13 +94,18 @@ export default function AuthRoute() {
     } as LoginForm,
     validationSchema,
     onSubmit: async (form) => {
-      await dispatch(
-        login({ ...form, password: MD5(form.password).toString() })
-      );
-      navigate("/counter", {
-        replace: true,
-      });
-      console.log(token);
+      try {
+        await dispatch(
+          login({ ...form, password: MD5(form.password).toString() })
+        );
+        if (getToken()) {
+          navigate("/", {
+            replace: true,
+          });
+        }
+      } catch (error) {
+        console.log(error);
+      }
     },
   });
 
@@ -133,7 +138,7 @@ export default function AuthRoute() {
             fullWidth
             margin="dense"
             variant="standard"
-            {...formikFieldProps({
+            {...FieldProps({
               formik,
               label: "User Name",
               field: "username",
@@ -149,7 +154,7 @@ export default function AuthRoute() {
             <Input
               type={showPassword ? "text" : "password"}
               margin="dense"
-              {...formikFieldProps({
+              {...FieldPropsNH({
                 formik,
                 label: "Password",
                 field: "password",
@@ -186,7 +191,7 @@ export default function AuthRoute() {
             </InputLabel>
             <Input
               margin="dense"
-              {...formikFieldProps({
+              {...FieldPropsNH({
                 formik,
                 label: "SMS Code",
                 field: "msgCode",

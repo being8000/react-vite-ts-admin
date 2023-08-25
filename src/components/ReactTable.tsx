@@ -10,6 +10,10 @@ type Person = {
   address: string;
   city: string;
   state: string;
+  state1?: string;
+  state2?: string;
+  state3?: string;
+  state4?: string;
 };
 
 //nested data is ok, see accessorKeys in ColumnDef below
@@ -90,11 +94,32 @@ const Example = () => {
         header: "State",
         size: 150,
       },
+      {
+        accessorKey: "state1",
+        header: "State1",
+        size: 150,
+      },
+      {
+        accessorKey: "state2",
+        header: "State2",
+        size: 150,
+      },
+      {
+        accessorKey: "state3",
+        header: "State3",
+        size: 150,
+      },
+      {
+        accessorKey: "state4",
+        header: "State4",
+        size: 150,
+      },
     ],
     []
   );
-
-  return <MaterialReactTable columns={columns} data={data} />;
+  const d = [...data, ...data, ...data, ...data, ...data];
+  const d1 = [...d, ...d, ...d, ...d, ...d];
+  return <MaterialReactTable columns={columns} data={d1} />;
 };
 
 export default Example;

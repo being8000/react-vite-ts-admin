@@ -70,7 +70,7 @@ class RequestInstance {
         }
         const successCode = "0,200,20000";
         if (successCode.includes(code + "")) {
-          return res;
+          return res.data;
         } else {
           if (code === 401 || code == 4001) {
             createDialog({
@@ -89,12 +89,12 @@ class RequestInstance {
             }
           }
 
-          return res;
+          return Promise.reject(res);
         }
       },
       (err) => {
         /* http错误处理，处理跨域，404，401，500*/
-        toast.error(JSON.stringify(err), {
+        toast.error("Network Error", {
           toastId: JSON.stringify(err),
         });
         // 如果是跨域

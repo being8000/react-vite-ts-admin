@@ -46,26 +46,26 @@ interface LoginResponse {
 }
 
 export const login = createAsyncThunk("user/login", async (form: LoginForm) => {
-  const response = await api.POST<ResponseType<LoginResponse>>("Login", form);
-  const data = response.data;
-  if (data.code == "200") {
-    const token = response.data.data.token;
+  try {
+    const response = await api.POST<LoginResponse>("Login", form);
+    const token = response.data.token;
     localStorage.setItem(SYSTEM_ACCOUNT_TOKEN, token);
     return token;
+  } catch (error) {
+    return Promise.reject((error as ResponseType<null>)?.message || error);
   }
-  return Promise.reject(data.message);
 });
 export const userInfo = createAsyncThunk("user/info", async () => {
-  const response = await api.POST<ResponseType<User>>("UserInfo", {});
-  const data = response.data;
-  if (data.code == "200") {
-    return data.data;
+  try {
+    const response = await api.POST<User>("UserInfo", {});
+    return response.data;
+  } catch (error) {
+    return Promise.reject((error as ResponseType<null>)?.message || error);
   }
-  return Promise.reject(data.message);
   // The value we return becomes the `fulfilled` action payload
 });
 
-export const userSlice = createSlice({
+export const slice = createSlice({
   name: "user",
   initialState,
   reducers: {
@@ -94,5 +94,5 @@ export const selectToken = (state: RootState) => {
 };
 
 export const selectUser = (state: RootState) => state.user.user;
-export const { setUserInfo, clearUserInfo } = userSlice.actions;
-export default userSlice.reducer;
+export const { setUserInfo, clearUserInfo } = slice.actions;
+export default slice.reducer;
