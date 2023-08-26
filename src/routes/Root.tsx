@@ -7,10 +7,13 @@ import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import IconButton from "@mui/material/IconButton";
 import Toolbar from "@mui/material/Toolbar";
-import { Outlet, useNavigation } from "react-router-dom";
+import { Outlet, useNavigation, redirect } from "react-router-dom";
 import Sidebar from "@/components/Sidebar/Index";
 import Navbar from "@/components/Navbar/Navbar";
 import { styled, useTheme, Theme, CSSObject } from "@mui/material/styles";
+import { userInfo, clearUserInfo } from "@/app/slice/UserSlice";
+import { store } from "@/app/store";
+import { ScrollRestoration } from "react-router-dom";
 
 const drawerWidth = 240;
 
@@ -68,8 +71,17 @@ interface Props {
    */
   window?: () => Window;
 }
-
-export default function Root(props: Props) {
+export async function loader() {
+  if (!store.getState().user.user) {
+    await store.dispatch(userInfo());
+  }
+  if (!store.getState().user.user) {
+    await store.dispatch(clearUserInfo());
+    return redirect("/login");
+  }
+  return store.getState().user.user;
+}
+export function Root(props: Props) {
   const theme = useTheme();
   const navigation = useNavigation();
   const { window } = props;
@@ -112,65 +124,68 @@ export default function Root(props: Props) {
     window !== undefined ? () => window().document.body : undefined;
 
   return (
-    <Box sx={{ display: "flex" }}>
-      <CssBaseline />
+    <>
+      <Box sx={{ display: "flex" }}>
+        <CssBaseline />
 
-      <Navbar
-        handleDrawerToggle={handleDrawerToggle}
-        handleMobileDrawerToggle={handleMobileDrawerToggle}
-        open={open}
-      />
-      <Box
-        component="nav"
-        sx={{ flexShrink: { sm: 0 } }}
-        aria-label="mailbox folders"
-      >
-        <MuiDrawer
-          container={container}
-          variant="temporary"
-          open={mobileOpen}
-          onClose={handleMobileDrawerToggle}
-          ModalProps={{
-            keepMounted: true, // Better open performance on mobile.
-          }}
-          sx={{
-            "& .MuiDrawer-paper": {
-              boxSizing: "border-box",
-              width: drawerWidth,
-            },
-          }}
-        >
-          {drawer}
-        </MuiDrawer>
-        <Drawer
-          variant="permanent"
+        <Navbar
+          handleDrawerToggle={handleDrawerToggle}
+          handleMobileDrawerToggle={handleMobileDrawerToggle}
           open={open}
+        />
+        <Box
+          component="nav"
+          sx={{ flexShrink: { sm: 0 } }}
+          aria-label="mailbox folders"
+        >
+          <MuiDrawer
+            container={container}
+            variant="temporary"
+            open={mobileOpen}
+            onClose={handleMobileDrawerToggle}
+            ModalProps={{
+              keepMounted: true, // Better open performance on mobile.
+            }}
+            sx={{
+              "& .MuiDrawer-paper": {
+                boxSizing: "border-box",
+                width: drawerWidth,
+              },
+            }}
+          >
+            {drawer}
+          </MuiDrawer>
+          <Drawer
+            variant="permanent"
+            open={open}
+            sx={{
+              display: { xs: "none", sm: "block" },
+            }}
+          >
+            {drawer}
+          </Drawer>
+        </Box>
+        <Box
+          component="main"
           sx={{
-            display: { xs: "none", sm: "block" },
+            flexGrow: 1,
+            p: 3,
+            width: {
+              sm: `100%`,
+            },
+            maxWidth: "100vw",
           }}
         >
-          {drawer}
-        </Drawer>
+          <Toolbar />
+          <div
+            id="detail"
+            className={navigation.state === "loading" ? "loading" : ""}
+          >
+            <Outlet />
+          </div>
+        </Box>
+        <ScrollRestoration />
       </Box>
-      <Box
-        component="main"
-        sx={{
-          flexGrow: 1,
-          p: 3,
-          width: {
-            sm: `100%`,
-          },
-          maxWidth: "100vw",
-        }}
-      >
-        <Toolbar />
-        <div
-          id="detail"
-          className={navigation.state === "loading" ? "loading" : ""}
-        >
-          <Outlet />
-        </div>
-      </Box>
-    </Box>
+    </>
   );
 }

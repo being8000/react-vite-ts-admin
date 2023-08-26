@@ -1,40 +1,61 @@
 import {
   createBrowserRouter,
   RouterProvider,
-  redirect,
-  // createHashRouter,
+  createHashRouter,
 } from "react-router-dom";
 
 import ErrorPage from "@/error-page";
 // import Dashboard from "./routes/dashboard";
-import Root from "@/routes/Root";
-import Contacts from "@/routes/contact/index";
-import CounterRoute from "@/routes/counter/counter";
+// import CounterRoute from "@/routes/counter/counter";
 import LoginRoute from "@/routes/login/index";
-import { store } from "@/app/store";
-import Dashboard from "./routes/dashboard";
-import { userInfo, clearUserInfo } from "./app/slice/UserSlice";
 import ThemeProvider from "@/components/Theme/default";
 
-async function loader() {
-  if (!store.getState().user.user) {
-    await store.dispatch(userInfo());
-  }
-  if (!store.getState().user.user) {
-    await store.dispatch(clearUserInfo());
-    return redirect("/login");
-  }
-  return store.getState().user.user;
-}
-
-const router = createBrowserRouter(
+const router = createHashRouter(
   [
     {
       path: "/",
-      element: <Root />,
+      async lazy() {
+        const { loader, Root } = await import("@/routes/Root");
+        return {
+          loader: loader,
+          Component: Root,
+        };
+      },
       errorElement: <ErrorPage />,
-      loader: loader,
-      children: [Dashboard, Contacts, CounterRoute],
+      children: [
+        {
+          index: true,
+          async lazy() {
+            const { loader, Dashboard } = await import("@/routes/dashboard");
+            return {
+              loader: loader,
+              Component: Dashboard,
+            };
+          },
+        },
+        {
+          path: "contacts",
+          async lazy() {
+            const { loader, Root } = await import("@/routes/contact/index");
+            return {
+              loader: loader,
+              Component: Root,
+            };
+          },
+        },
+        {
+          path: "counter",
+          async lazy() {
+            const { loader, CounterRoute } = await import(
+              "@/routes/counter/counter"
+            );
+            return {
+              loader: loader,
+              Component: CounterRoute,
+            };
+          },
+        },
+      ],
     },
     LoginRoute,
   ],

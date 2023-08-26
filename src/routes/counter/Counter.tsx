@@ -11,7 +11,6 @@ import {
 } from "@/app/slice/CounterSlice";
 import styles from "./Counter.module.css";
 import {
-  RouteObject,
   useNavigate,
   // useNavigation,
   // useLoaderData,
@@ -23,10 +22,10 @@ import {
 } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "@/app/hooks";
 
-function loader() {
+export function loader() {
   return {};
 }
-function CounterRoute() {
+export function CounterRoute() {
   const navigate = useNavigate();
   const count = useAppSelector(selectCount);
   const status = useAppSelector(selectStatus);
@@ -97,8 +96,3 @@ function CounterRoute() {
     </div>
   );
 }
-export default {
-  path: "/counter",
-  element: <CounterRoute />,
-  loader: loader,
-} as RouteObject;

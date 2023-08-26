@@ -1,5 +1,4 @@
 import {
-  RouteObject,
   useNavigation,
   useLoaderData,
   useSubmit,
@@ -52,7 +51,8 @@ export const loader: LoaderFunction = async ({ request }) => {
   const contacts = await getContacts(q);
   return { contacts, q } as LoaderData;
 };
-function Root() {
+
+export function Root() {
   const [open, setOpen] = useState(false);
   const [contact, setContact] = useState<Contacts>({
     id: "",
@@ -171,6 +171,7 @@ function Root() {
         </TableContainer>
       </div>
       <ReactTable />
+
       {/* <div
         id="detail"
         className={navigation.state === "loading" ? "loading" : ""}
@@ -180,9 +181,3 @@ function Root() {
     </>
   );
 }
-
-export default {
-  path: "/contacts",
-  element: <Root />,
-  loader: loader,
-} as RouteObject;
