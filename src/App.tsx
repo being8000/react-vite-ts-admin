@@ -14,6 +14,7 @@ import LoginRoute from "@/routes/login/index";
 import { store } from "@/app/store";
 import Dashboard from "./routes/dashboard";
 import { userInfo, clearUserInfo } from "./app/slice/UserSlice";
+import ThemeProvider from "@/components/Theme/default";
 
 async function loader() {
   if (!store.getState().user.user) {
@@ -48,6 +49,8 @@ const router = createBrowserRouter(
 // router.subscribe((state) => console.log("new state", state));
 export default function App() {
   return (
-    <RouterProvider router={router} future={{ v7_startTransition: true }} />
+    <ThemeProvider>
+      <RouterProvider router={router} future={{ v7_startTransition: true }} />
+    </ThemeProvider>
   );
 }

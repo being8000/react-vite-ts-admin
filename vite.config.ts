@@ -18,6 +18,7 @@ export default defineConfig(({ mode }) => {
     },
     build: {
       minify: "esbuild",
+      target: "esnext",
       // brotliSize: false,
       // 消除打包大小超过警告
       // remote console.log in prod

@@ -8,6 +8,7 @@ import Divider from "@mui/material/Divider";
 import MailIcon from "@mui/icons-material/Mail";
 import Ring from "../Loading/Ring";
 import { NavLink } from "react-router-dom";
+import { styled, useTheme, ThemeOptions, alpha } from "@mui/material/styles";
 
 const routers = [
   {
@@ -27,13 +28,10 @@ const routers = [
   },
 ];
 export default function Sidebar() {
+  const theme = useTheme();
   return (
     <>
-      <List
-        sx={{
-          padding: "5px",
-        }}
-      >
+      <List sx={{}}>
         {routers.map((route, index) => (
           <NavLink
             key={index}
@@ -47,10 +45,13 @@ export default function Sidebar() {
                 disablePadding
                 className="transition duration-[150ms]"
                 {...(isActive && {
-                  sx: {
-                    borderRadius: "8px",
-                    bgcolor: "#1976d2",
-                    color: "#fff",
+                  sx: (theme) => {
+                    return {
+                      borderRadius: "8px",
+                      bgcolor: alpha(theme.palette.primary.main, 0.8),
+                      color: "#fff",
+                      transform: "scale(0.95)",
+                    };
                   },
                 })}
               >
